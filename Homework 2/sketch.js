@@ -29,7 +29,7 @@ function draw ()
 
     // Ground
     fill(30, 100, 50);
-    rect(0, 300, width, 100);
+    rect(0, 300, width, 300);
 }
 
     
