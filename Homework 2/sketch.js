@@ -20,6 +20,8 @@ function draw ()
     ellipse(400, 40, 4, 4);
     ellipse(520, 40, 3, 3);
     ellipse(60, 120, 4, 4);
+    ellipse(570, 100, 5, 6);
+    ellipse(630, 40, 5, 6);
 
     // Mountains
     fill(60, 80, 120);
