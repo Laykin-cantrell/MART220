@@ -17,7 +17,7 @@ function setup()  {
   createCanvas(700, 500);
 
   //Create stars (random positions)
-  for (let i = 0; i <numStars; i++ {
+  for (let i = 0; i <numStars; i++) {
     stars.push({
       x: random(width),
       y: random(0, 220),
@@ -35,7 +35,7 @@ function draw() {
   noStroke();
   fill(255);
   textSize(18);
-  text("Starry Night", 10, 24):
+  text("Starry Night", 10, 24);
 
   // Stars
   for (let i = 0; i < stars.length; i++)  {
