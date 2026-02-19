@@ -14,7 +14,7 @@ let moonLeftLimit = 100;
 let moonRightLimit = 640;
 
 function setup()  {
-  createCanvas(700, 500);
+  createCanvas(700, 600);
 
   //Create stars (random positions)
   for (let i = 0; i <numStars; i++) {
