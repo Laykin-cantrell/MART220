@@ -1,7 +1,7 @@
 // Stars twinkle when the SPACE BAR is held
 // Click the moon for it to move back and forth
 
-let stars = {};
+let stars = [];
 let numStars = 120;
 
 let moonX = 480;
