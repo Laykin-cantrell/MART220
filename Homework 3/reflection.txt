@@ -1,1 +1,10 @@
-
+For this assignment, I built on my last assignment and made it interactive. When you hold down the
+spacebar, the stars twinkle until you let go of the spacebar. I also made the moon move when it's
+clicked on. It moves back and forth across the sky, and you can click it again for it to stop moving.
+I had a very hard time figuring out how to create the twinkle effect, but in the end, I'm glad it worked out.
+Adding those features made the design feel more alive and interactive, instead of looking like a
+Microsoft Paint photo. For the ChatGPT version, I had ChatGPT add onto its version and create the 
+same interactives as I did. It's not interactive at all. The moon is in a constant loop, and you can't
+click on it to stop or start moving. Along with that, there are no stars in the sky anymore. 
+With no stars in the sky, you can't hold down the spacebar to make them twinkle. It looks like AI couldn't 
+comprehend how to create an interactive design. 
