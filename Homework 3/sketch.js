@@ -1,4 +1,4 @@
-// Stars twinkle when the SPACE BAR is held
+// Stars twinkle when the SPACEBAR is held
 // Click the moon for it to move back and forth
 
 let stars = [];
