@@ -16,6 +16,10 @@ let pastaY = 360;
 let strawberriesX = 100;
 let strawberriesY = 500;
 
+let beignetsOffsetX = -180, beignetsOffsetY = -60;
+let pastaOffsetX = 180, pastaOffsetY = -20;
+let strawberriesOffsetX = 0, strawberriesOffsetY = 170;
+
 let timeLeft = 20;
 let timerInterval;
 let moveInterval;
@@ -26,11 +30,11 @@ function preload() {
     beignetsImg = loadImage ("images/beignets.png");
     pastaImg = loadImage ("images/pasta.png");
     strawberriesImg = loadImage ("images/strawberries.png");
-    theFont = loadFont ("assets/Mogra-Regular.tff");
+    theFont = loadFont ("assets/Gveret_Levin/GveretLevin-Regular.ttf");
 }
 
 function setup() {
-    createCanvas (900, 600);
+    createCanvas (1100, 900);
     moveInterval = setInterval(randomMoveAI, 2500);
     chaseInterval = setInterval(chaseAI, 120);
     timerInterval = setInterval(timer, 1000);
@@ -51,7 +55,7 @@ function draw() {
 
     // Timer Text
     textSize (22);
-    fill(255);
+    fill(10, 14, 17);
     text ("Time Left: " + timeLeft, 30, 130);
 
     // ai target
@@ -76,14 +80,24 @@ function draw() {
         if (timeLeft <=0) return;
 
         let chaseSpeed = 0.10;
-        beignetsX = lerp(beignetsX, aiX, chaseSpeed);
-        beignetsY = lerp(beignetsY, aiY, chaseSpeed);
+        
+        let beignetsTargetX = aiX + beignetsOffsetX;
+        let beignetsTargetY = aiY + beignetsOffsetY;
 
-        pastaX = lerp(pastaX, aiX, chaseSpeed);
-        pastaY = lerp(pastaY, aiY, chaseSpeed);
+        let pastaTargetX = aiX + pastaOffsetX;
+        let pastaTargeY = aiY + pastaOffsetY;
 
-        strawberriesX = lerp(strawberriesX, aiX, chaseSpeed);
-        strawberriesY = lerp(strawberriesY, aiY, chaseSpeed);
+        let strawberriesTargetX = aiX + strawberriesOffsetX;
+        let strawberriesTargetY = aiY + strawberriesOffsetY;
+
+        beignetsX = lerp(beignetsX, beignetsTargetX, chaseSpeed);
+        beignetsY = lerp(beignetsY, beignetsTargetY, chaseSpeed);
+
+        pastaX = lerp(pastaX, pastaTargetX, chaseSpeed);
+        pastaY = lerp(pastaY, pastaTargeY, chaseSpeed);
+
+        strawberriesX = lerp(strawberriesX, strawberriesTargetX, chaseSpeed);
+        strawberriesY = lerp(strawberriesY, strawberriesTargetY, chaseSpeed);
     }
     // countdown timer
     function timer() {
