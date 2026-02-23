@@ -5,7 +5,7 @@ var lemonSize = [];
 var lemonImg;
 
 function preload() {
-    lemonImg = lemonImg("images/lemon.png");
+    lemonImg = loadImg("images/lemon.png");
 }
 
 function setup() {
