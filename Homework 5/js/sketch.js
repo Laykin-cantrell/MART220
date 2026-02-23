@@ -1,4 +1,4 @@
-var numberOfLemons = 10;
+var numberOfLemons = 5;
 var lemonX = [];
 var lemonY = [];
 var lemonSize = [];
