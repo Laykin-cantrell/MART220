@@ -4,7 +4,7 @@ let numLemons = 6;
 // pigeon animation frames
 let pigeonFrames = [];
 let frameIndex = 0;
-let frameSpeed = 6;
+let frameSpeed = 0.5;
 
 // pigeon position
 let birdX = 300;
@@ -64,10 +64,10 @@ function draw() {
 
     let currentSpeed;
     if (moving) {
-        currentSpeed = 8;
+        currentSpeed = 10;
     }
     else {
-        currentSpeed = 10;
+        currentSpeed = 14;
     }
 
     if (frameCount % currentSpeed === 0) {
