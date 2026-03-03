@@ -136,3 +136,38 @@ function draw() {
         textAlign(LEFT, BASELINE);
     }
 }
+
+// lemon
+class Lemon {
+    constructor(x, y, s) {
+        this.x = x;
+        this.y = y;
+        this.s = s;
+        this.setNextMove();
+    }
+
+    setNextMove() {
+        this.nextMoveFrame = frameCount + floor(random(60, 180));
+    }
+
+    update() {
+        if (gameState !=="playing") return;
+
+        if (frameCount >= this.nextMoveFrame) {
+            this.x = random(60, width - 60);
+            this.y = random(100, height - 60);
+            this.setNextMove();
+        }
+    }
+    
+    respawn() {
+        this.x = random(60, width - 60);
+        this.y = random(100, height - 60);
+        this.setNextMove();
+    }
+
+    display() {
+        imageMode(CENTER);
+        image(lemonImg, this.x, this.y, this.s, this.s);
+    }
+}
