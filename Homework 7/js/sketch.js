@@ -22,7 +22,7 @@ let startTime = 0;
 function preload() {
     // pigeon frames
     for (let i = 1; i <=22; i++) {
-        pigeonFrames.push(loadImage("image/pigeon_" + i + ".png"));
+        pigeonFrames.push(loadImage("images/pigeon_" + i + ".png"));
     }
 
     // lemon image
@@ -30,6 +30,7 @@ function preload() {
 }
 
 function setup() {
+    createCanvas(700, 500);
     for (let i = 0; i < numLemons; i++) {
         let x = random(60, width - 60);
         let y = random(100, height - 60);
@@ -54,7 +55,6 @@ function draw() {
 
     // display lemons
     for (let i = 0; i < lemons.length; i++) {
-        lemons[i].update();
         lemons[i].display();
     }
 
@@ -102,20 +102,19 @@ function draw() {
     // score
     if (gameState === "playing") {
         for (let i = 0; i < lemons.length; i++) {
-            let birdRadius = 55;
-            let lemonRadius = lemons[i].s * 0.5;
-
             let d = dist(birdX, birdY, lemons[i].x, lemons[i].y);
 
-            if (d < birdRadius + lemonRadius) {
+            if (d < 60) {
                 score++;
-                lemons[i].respawn();
+
+                lemons[i].x = random(60, width - 60);
+                lemons[i].y = random(100, height - 60);
             }
         }
     }
 
     // text
-    FileList(0);
+    fill(0);
     textSize(16);
     text("Score: " + score, 10, 25);
     text("Time: " + timeLeft, width - 110, 25);
@@ -150,15 +149,6 @@ class Lemon {
         this.nextMoveFrame = frameCount + floor(random(60, 180));
     }
 
-    update() {
-        if (gameState !=="playing") return;
-
-        if (frameCount >= this.nextMoveFrame) {
-            this.x = random(60, width - 60);
-            this.y = random(100, height - 60);
-            this.setNextMove();
-        }
-    }
     
     respawn() {
         this.x = random(60, width - 60);
