@@ -8,7 +8,7 @@ let frameIndex = 0;
 // pigeon position
 let birdX = 300;
 let birdY = 200;
-let moveSpeed = 2;
+let moveSpeed = 6;
 
 // food image
 let lemonImg;
@@ -50,7 +50,7 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(700, 500);
+    createCanvas(1800, 900);
 
     music.setVolume(0.2);
     goodSound.setVolume(0.8);
