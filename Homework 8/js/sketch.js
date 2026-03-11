@@ -31,6 +31,10 @@ let oranges = [];
 // health
 let health = 100;
 
+// timer
+let fruitMoveTimer = 0;
+let fruitMoveInterval = 3000;
+
 function preload() {
     // pigeon frames
     for (let i = 1; i <=22; i++) {
@@ -74,10 +78,27 @@ function setup() {
     }
 
     startTime = millis();
+    fruitMoveTimer = millis();
 }
 
 function draw() {
     background(196, 241, 255);
+
+    if (millis() - fruitMoveTimer > fruitMoveInterval) {
+
+        // move lemons
+        for (let i = 0; i < lemons.length; i++) {
+            lemons[i].x = random(60, width - 60);
+            lemons[i].y = random(100, height - 60);
+        }
+
+        for (let i = 0; i < oranges.length; i++) {
+            oranges[i].x = random(60, width - 60);
+            oranges[i].y = random(100, height - 60);
+        }
+
+        fruitMoveTimer = millis ();
+    }
 
     // timer
     let elapsedSeconds = floor((millis() - startTime) / 1000);
