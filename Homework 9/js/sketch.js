@@ -1,198 +1,257 @@
 let pigeon;
-let pigeonFrames = [];
+let pigeonPaths = [];
 
 let lemonImg;
 let orangeImg;
-let buildingImg;
-let treeImg;
-let cloudImg;
 
 let lemons = [];
 let oranges = [];
-let buildings = [];
-let trees = [];
-let clouds = [];
-
-// sounds
-let music;
-let goodSound;
-let badSound;
+let obstacles = [];
 
 let score = 0;
 let health = 100;
 let gameState = "playing";
 
 let moveSpeed = 5;
-let frameIndex = 0;
+
+// sounds
+let music;
+let goodSound;
+let badSound;
 
 function preload() {
     for (let i = 1; i <= 22; i++) {
-        pigeonFrames.push(loadImage("images/pigeon/pigeon_" + i + ".png"));
+        pigeonPaths.push("images/pigeon/pigeon_" + i + ".png");
     }
 
+    // images
     lemonImg = loadImage("images/lemon/lemon.png");
     orangeImg = loadImage("images/orange/orange.png");
-    buildingImg = loadImage("images/obstacles/building.png");
-    treeImg = loadImage("images/obstacles/tree.png");
-    cloudImg = loadImage("images/obstacles/cloud.png");
 
-    // sound
+    // sounds
     music = loadSound("sounds/background_music.wav");
     goodSound = loadSound("sounds/good_sound.mp3");
     badSound = loadSound("sounds/bad_sound.wav");
 }
 
 function setup() {
-    new Canvas(1200, 700);
+    new Canvas(900, 600);
 
-    // sound settings
+    // sound volume
     music.setVolume(0.2);
     goodSound.setVolume(0.8);
     badSound.setVolume(1);
 
-    // clouds
-    for (let i = 0; i < 3; i++) {
-        let cloud = new Sprite(random(width), random(40, 130));
-        cloud.img = cloudImg;
-        cloud.scale = random(0.3, 0.5);
-        cloud.vel.x = random(0.5, 1.2);
-        cloud.collidar = "none";
-        cloud.layer = 0;
-        clouds.push(cloud);
-    }
+    // player sprite
+    pigeon = new Sprite(450, 300, 80, 80);
 
-    // player
-    pigeon = new Sprite(350, 250, 80, 80);
-    pigeon.img = pigeonFrames[0];
-    pigeon.scale = 0.7;
-    pigeon.layer = 2;
+    pigeon.addAni("fly", ...pigeonPaths);
+    pigeon.changeAni("fly");
 
-    // lemons
+    pigeon.scale = 0.5;
+
+    // stop spinning
+    pigeon.rotationLock = true;
+    pigeon.rotation = 0;
+    pigeon.rotationSpeed = 0;
+
+    // lemons = collectible items
     for (let i = 0; i < 6; i++) {
-        let lemon = new Sprite(random(60, width - 60), random(100, height - 60));
+        let lemon = new Sprite(
+            random(80, width - 80),
+            random(100, height - 80),
+            40,
+            40
+        );
+
         lemon.img = lemonImg;
-        lemon.scale = 0.18;
+        lemon.scale = 0.1;
+        lemon.collider = "none";
         lemons.push(lemon);
     }
 
-    // oranges
+    // oranges = bad items
     for (let i = 0; i < 4; i++) {
-        let orange = new Sprite(random(60, width - 60), random(100, height - 60));
+        let orange = new Sprite(
+            random(80, width - 80),
+            random(100, height - 80),
+            40,
+            40
+        );
+
         orange.img = orangeImg;
-        orange.scale = 0.13;
+        orange.scale = 0.1;
+        orange.collider = "none";
         oranges.push(orange);
     }
 
-    // buildings
-    let b1 = new Sprite(180, 200, 120, 120);
-    b1.img = buildingImg;
-    b1.scale = 0.4;
-    b1.collidar = "static";
-    buildings.push(b1);
+    // grey obstacle spawns randomly at start
+    let greyObstacle = new Sprite(
+        random(100, width - 100),
+        random(120, height - 100),
+        100,
+        60
+    );
 
-    let b2 = new Sprite(520, 320, 120, 120);
-    b1.img = buildingImg;
-    b1.scale = 0.4;
-    b1.collidar = "static";
-    buildings.push(b2);
+    greyObstacle.color = "grey";
+    greyObstacle.collider = "static";
+    greyObstacle.rotationlock = true;
+    obstacles.push(greyObstacle);
 
-    // trees
-    for (let i = 0; i < 3; i++) {
-        let tree = new Sprite(random(80, width - 80), random(100, height - 80));
-        tree.img = treeImg;
-        tree.scale = 0.3;
-        tree.collidar = "none";
-        trees.push(tree);
-    }
+    // pink obstacle remains stationary
+    let pinkObstacle = new Sprite(
+        300,
+        200,
+        100,
+        60
+    );
+
+    pinkObstacle.color = "pink";
+    pinkObstacle.collider = "static";
+    pinkObstacle.rotationlock = true;
+    obstacles.push(pinkObstacle);
+
+    // purple obstacle player cannot pass through
+    let purpleObstacle = new Sprite(
+        650,
+        380,
+        100,
+        60
+    );
+
+    purpleObstacle.color = "purple";
+    purpleObstacle.collider = "static";
+    purpleObstacle. rotationlock = true;
+    obstacles.push(purpleObstacle);
 }
 
 function draw() {
     background(196, 241, 255);
-
-    // cloud loop
-    for (let cloud of clouds) {
-        if (cloud.x > width + 50) {
-            cloud.x = -50;
-            cloud.y = random(40,130);
-        }
-    }
 
     if (gameState === "playing") {
 
         pigeon.vel.x = 0;
         pigeon.vel.y = 0;
 
-        if (kb.pressing("a")) pigeon.vel.x = -moveSpeed;
-        if (kb.pressing("d")) pigeon.vel.x = moveSpeed;
-        if (kb.pressing("w")) pigeon.vel.y = -moveSpeed;
-        if (kb.pressing("s")) pigeon.vel.y = moveSpeed;
+        // keep pigeon from spinning
+        pigeon.rotation = 0;
+        pigeon.rotationSpeed = 0;
 
-        // animation
-        if (frameCount % 6 === 0) {
-            frameIndex = (frameIndex + 1) % pigeonFrames.length;
-            pigeon.img = pigeonFrames[frameIndex];
+        // wasd movement
+        if (kb.pressing("a")) {
+            pigeon.vel.x = -moveSpeed;
         }
 
+        if (kb.pressing("d")) {
+            pigeon.vel.x = moveSpeed;
+        }
+
+        if (kb.pressing("w")) {
+            pigeon.vel.y = -moveSpeed;
+        }
+
+        if (kb.pressing("s")) {
+            pigeon.vel.y = moveSpeed;
+        }
+
+        // keep pigeon on screen
         pigeon.x = constrain(pigeon.x, 40, width - 40);
         pigeon.y = constrain(pigeon.y, 40, height - 40);
 
-        // building collision 
-        for (let b of buildings) {
-            pigeon.collides(b);
+        // obstacle collision
+        for (let i = 0; i < obstacles.length; i++) {
+            pigeon.collides(obstacles[i]);
         }
 
-        // lemon collision 
-        for (let lemon of lemons) {
-            if (pigeon.overlaps(lemon)) {
+        // lemons 
+        for (let i = 0; i < lemons.length; i++) {
+            if (pigeon.overlaps(lemons[i])) {
                 score++;
                 goodSound.play();
 
-                lemon.x = random(60, width - 60);
-                lemon.y = random(100, height - 60);
+                // relocate lemon
+                lemons[i].x = random(80, width - 80);
+                lemons[i].y = random(100, height - 80);
             }
         }
 
-        // orange collision
-        for (let orange of oranges) {
-            if (pigeon.overlaps(orange)) {
+        // oranges
+        for (let i = 0; i < oranges.length; i++) {
+            if (pigeon.overlaps(oranges[i])) {
                 health -= 10;
                 badSound.play();
 
-                orange.x = random(60, width - 60);
-                orange.y = random(100, height - 60);
+                // relocate orange
+                oranges[i].x = random(80, width - 80);
+                oranges[i].y = random(100, height - 80);
             }
         }
 
-        // win / lose
-        if (score >= 10) gameState = "win";
-        if (health <= 0) gameState = "lose";
+        // win codition
+        if (score >= 10) {
+            gameState = "win";
+
+            pigeon.vel.x = 0;
+            pigeon.vel.y = 0;
+        }
+
+        // lose codition
+        if (health <= 0) {
+            gameState = "lose";
+
+            pigeon.vel.x = 0;
+            pigeon.vel.y = 0;
+        }
     }
 
+    // text
     fill(0);
-    textSize(18);
-    text("Score: " + score, 20, 30);
-    text("Health: " + health, 20, 55);
-    text("WASD to move", 20, 80);
 
+    textSize(20);
+    textAlign(LEFT);
+
+    text("Score: " + score, 20, 30);
+    text("Health: " +health, 20, 60);
+    text("Move with WASD", 20, 90);
+
+    // win screen
     if (gameState === "win") {
         textAlign(CENTER, CENTER);
-        textSize(48);
+
+        textSize(50);
         text("YOU WIN!", width / 2, height / 2);
+
+        textSize(24);
+        text("You collected 10 lemons!", width / 2, height / 2 + 55);
     }
 
+    // lose screen
     if (gameState === "lose") {
         textAlign(CENTER, CENTER);
-        textSize(48);
+
+        textSize(50);
         text("GAME OVER", width / 2, height / 2);
+
+        textSize(24);
+        text("Your health reached 0.", width / 2, height / 2 + 55);
     }
 }
 
-// sound 
+// start background music after click
 function mousePressed() {
+    console.log("mouse clicked");
+
     userStartAudio();
 
-    if (!music.isPlaying()) {
-        music.setLoop(true);
-        music.play();
+    if (music) {
+        console.log("music exists");
+
+        if (!music.isPlaying()) {
+            music.setLoop(true);
+            music.play();
+            console.log("music should be playing");
+        }
+    } else {
+        console.log("music is missing");
     }
 }
